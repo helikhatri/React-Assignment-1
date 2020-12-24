@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
+import { useFormFields } from "../libs/hooksLib";
 import axios from 'axios';
 import "./Userlist.css";
 //import { useFormFields } from "../libs/hooksLib";
@@ -14,10 +15,17 @@ export default function MyComponent(props) {
   const apiurl = 'https://reqres.in/api/unknown';
   const { isAuthenticated } = useAppContext();
   const [users, setUsers] = useState(null);
-  const [filterText, setFilterText] = useState('');
+  //const [filterText, setFilterText] = useState('');
   const [alert, setAlert] = useState(false);
   const [msg, setMsg] = useState('');
-  let FilterType = 0;
+  const [FilterType, setFilterType] = useState(0);
+  const [filterText, handleFieldChange] = useFormFields({
+    Text1: "",
+    Text2: "",
+    Text3: "",
+    Text4: ""
+  });
+
 
   const columns = [
 
@@ -26,14 +34,14 @@ export default function MyComponent(props) {
       selector: 'name',
       sortable: true,
       columns: '20%',
-      allowResize: true,
+      visible: false
     },
     {
       name: 'Pantone_value',
       selector: 'pantone_value',
       sortable: true,
       columns: '20%',
-      allowResize: true,
+      visible: false
     },
     {
       name: 'Year',
@@ -41,7 +49,7 @@ export default function MyComponent(props) {
       sortable: true,
       right: true,
       columns: '20%',
-      allowResize: true,
+      visible: true
     },
     {
       name: 'Color',
@@ -50,6 +58,7 @@ export default function MyComponent(props) {
       right: true,
       columns: '20%',
       allowResize: true,
+      visible: true
     },
     {
       name: 'Action',
@@ -58,6 +67,7 @@ export default function MyComponent(props) {
       right: true,
       columns: '20%',
       allowResize: true,
+      visible: true,
       cell:
         record => {
           return (
@@ -80,48 +90,41 @@ export default function MyComponent(props) {
     }
   ];
 
-
   const FilterComponent = ({ filterText, onFilter, onClear }) => (
     <>
-      <Form.Group size="sm" controlId="search1">
-        <Form.Control type="text" className="TextField" type="text" name="FilterName"
-          placeholder="Filter By Name" aria-label="Search Input" value={filterText} autoFocus
-          onChange={onFilter} />
+      <Form.Group size="sm" controlId="Text1">
+        <Form.Control type="text" className="TextField" name="1"
+          placeholder="Filter By Name" aria-label="Search Input" value={filterText.Text1} autoFocus
+          onChange={handleFieldChange} />
       </Form.Group>
       <Button className="ClearButton" onClick={onClear} style={{ marginBottom: '16px' }}>X</Button>
 
-      {/* <Form.Group size="sm" controlId="search2">
-        <Form.Control type="text" className="TextField"  type="text" name="FilterValue"
-          placeholder="Filter By Pantone value" aria-label="Search Input" value={filterText} 
-          onChange={onFilter} />
+      <Form.Group size="sm" controlId="Text2"> 
+        <Form.Control type="text" className="TextField" name="2"
+          placeholder="Filter By Pantone value" aria-label="Search Input" value={filterText.Text2} autoFocus
+          onChange={ handleFieldChange} onKeyUp={onFilter} />
       </Form.Group>
       <Button className="ClearButton" onClick={onClear} style={{ marginBottom: '16px' }}>X</Button>
 
-      <Form.Group size="sm" controlId="search3">
-        <Form.Control type="text" className="TextField"  type="text" name="FilterYear"
-          placeholder="Filter By Year" aria-label="Search Input" value={filterText} autoFocus
-          onChange={onFilter} />
+      <Form.Group size="sm" controlId="Text3">
+        <Form.Control type="text" className="TextField" name="3"
+          placeholder="Filter By Year" aria-label="Search Input" value={filterText.Text3} autoFocus
+          onChange={handleFieldChange} />
       </Form.Group>
       <Button className="ClearButton" onClick={onClear} style={{ marginBottom: '16px' }}>X</Button>
 
-      <Form.Group size="sm" controlId="search4" >
-        <Form.Control type="text" className="TextField" type="text" name="FilterColor"
-          placeholder="Filter By Color" aria-label="Search Input" value={filterText} autoFocus
-          onChange={onFilter}/>
+      <Form.Group size="sm" controlId="Text4">
+        <Form.Control type="text" className="TextField" name="4"
+          placeholder="Filter By Color" aria-label="Search Input" value={filterText.Text4} autoFocus
+          onChange={handleFieldChange} />
       </Form.Group>
-      <Button className="ClearButton" onClick={onClear} style={{ marginBottom: '16px' }}>X</Button> */}
+      <Button className="ClearButton" onClick={onClear} style={{ marginBottom: '16px' }}>X</Button>
 
     </>
   );
 
-  const onFilter = (event, type) => {
-    const value = event.target.value;
-    setFilterText({
-      ...setFilterText,
-      [event.target.name]: value,
-      clicked: false
-    });
-    FilterType = type;
+  const onFilter = (event) => {
+    setFilterType(parseInt(event.target.name,10));
   }
 
   const editRecord = (props) => {
@@ -137,21 +140,35 @@ export default function MyComponent(props) {
     //console.log(users);
   }
 
-  const filteredItems = users != null ? users.filter(item => item.name.includes(filterText.toLowerCase())
+ const filteredItems = users != null 
+ ? users.filter(item => 
+  FilterType == 1 ? item.name.toLowerCase().includes(filterText.Text1) :
+  FilterType == 2 ? item.pantone_value.toLowerCase().includes(filterText.Text2) :
+  FilterType == 3 ? item.year.toLowerCase().includes(filterText.Text3) : 
+  FilterType == 4 ? item.color.toLowerCase().includes(filterText.Text4)  : 
+  users) : "";
+
+  
+  console.log(filterText, FilterType);
     //&& item.name != null ? item.name.toLowerCase().includes(filterText.toLowerCase())
-  ) : "";
+   
 
   const subHeaderComponentMemo = React.useMemo(() => {
     const handleClear = () => {
       if (filterText) {
-        setFilterText('');
+        handleFieldChange('');
       }
     };
 
-    return <FilterComponent onFilter={e => setFilterText(e.target.value)}
+    // const Text = ({ FilterType == 1 ? filterText.Text1
+    //   ? 2 : filterText.Text2
+    //     ? 3 : filterText.Text3
+    //       ? 4 : filterText.Text4 : filterText.Text1;
+
+    return <FilterComponent onFilter={e => handleFieldChange(e.target.value)}
       onClear={handleClear}
-      filterText={filterText} />;
-  }, [filterText]);
+      filterText={filterText} onKeyUp={onFilter} />;
+  }, [handleFieldChange]);
 
   useEffect(() => {
     axios.get(apiurl)
@@ -167,9 +184,11 @@ export default function MyComponent(props) {
     }, 2000);
   }, [])
 
-  const showHide= (e) =>
-  {
-    console.log(e);
+  const showHide = (e) => {
+    const column = e.target.value;
+    if (column === "1") {
+      columns[1].show = false;
+    }
   }
   return (
     <div className="Home" style={{ width: '85%', float: 'right' }}>
@@ -178,12 +197,12 @@ export default function MyComponent(props) {
           {msg}
         </Alert> : null}
       { isAuthenticated && users != null && users.length > 0 ?
-      <>
-            <Button variant="link" onClick={showHide} value='0'> Name</Button>
-            <Button variant="link" onClick={showHide} data-column='1'> Pantone_value</Button>
-            <Button variant="link" onClick={showHide} data-column='2'>Year</Button>
-            <Button variant="link" onClick={showHide} data-column='3'> Color </Button>
-       
+        <>
+          <Button variant="link" onClick={showHide} value='1'> Name</Button>
+          <Button variant="link" onClick={showHide} value='2'> Pantone_value</Button>
+          <Button variant="link" onClick={showHide} value='3'>Year</Button>
+          <Button variant="link" onClick={showHide} value='4'> Color </Button>
+
           <DataTable
             title="UserList"
             columns={columns}
@@ -195,8 +214,8 @@ export default function MyComponent(props) {
             subHeaderComponent={subHeaderComponentMemo}
             colResizable
           /> </> : null
-           
-          }
+
+      }
 
     </div>
 
