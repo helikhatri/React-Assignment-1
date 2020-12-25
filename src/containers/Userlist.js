@@ -26,7 +26,23 @@ const MyComponent= (props)=>{
     Text4: ""
   });
   const [filterColumn, setFiltercolumn] = useState();
-  
+  useEffect(() => {
+    
+    axios.get(apiurl)
+      .then((response =>
+       {debugger;
+         setUsers(response.data.data)
+         debugger;}  ))
+      .then(setFiltercolumn(columns))
+  }, [])
+
+  useEffect(() => {
+    setInterval(() => {
+      alert ?
+        setAlert(false)
+        : setAlert(false)
+    }, 2000);
+  }, [])
   const columns= [
 
     {
@@ -91,6 +107,13 @@ const MyComponent= (props)=>{
         }
     }
   ];
+  const filteredItems = users != null && users.length >0 && filterText 
+  ? users.filter(item =>
+    FilterType == 1 ? item.name.toLowerCase().includes(filterText.Text1) :
+      FilterType == 2 ? item.pantone_value.toLowerCase().includes(filterText.Text2) :
+        FilterType == 3 ? item.year.toString().includes(filterText.Text3) :
+          FilterType == 4 ? item.color.toLowerCase().includes(filterText.Text4) :
+         users) :users;
 
   const FilterComponent = ({ filterText, onClear, onInput }) => (
     <>
@@ -125,23 +148,7 @@ const MyComponent= (props)=>{
 
     </>
   );
-  useEffect(() => {
-    
-    axios.get(apiurl)
-      .then((response =>
-       {debugger;
-         setUsers(response.data.data)
-         debugger;}  ))
-      .then(setFiltercolumn(columns))
-  }, [])
-
-  useEffect(() => {
-    setInterval(() => {
-      alert ?
-        setAlert(false)
-        : setAlert(false)
-    }, 2000);
-  }, [])
+  
 
   const onFilter = (event) => {
     var type = parseInt(event.target.name, 10);
@@ -158,16 +165,11 @@ const MyComponent= (props)=>{
     const user = [...users];
     user.splice(index, 1);
     setAlert(true);
+   // filteredItems=user;
     setUsers(user);
     setMsg('Record Deleted successfully');
   }
-  const filteredItems = users != null && users.length >0 && filterText 
-    ? users.filter(item =>
-      FilterType == 1 ? item.name.toLowerCase().includes(filterText.Text1) :
-        FilterType == 2 ? item.pantone_value.toLowerCase().includes(filterText.Text2) :
-          FilterType == 3 ? item.year.toString().includes(filterText.Text3) :
-            FilterType == 4 ? item.color.toLowerCase().includes(filterText.Text4) :
-           users) :users;
+  
 
   const subHeaderComponentMemo = React.useMemo(() => {
     const handleClear = (event) => {
@@ -184,13 +186,20 @@ const MyComponent= (props)=>{
 
   const showHide = (e) => {
     const index = parseInt(e.target.value);
-    let column = [...columns];
-    if (column[index].index === index) {
-      column[index].visible = column[index].visible == true ? false : true;
+    let column = [...filterColumn];
+    if (column[index].index == index) {
+      columns[index].visible = column[index].visible == true ? false : true;
     }
-
     column = columns.filter(col => col.visible == true);
     setFiltercolumn(column);
+    if(columns[index].visible == false)
+    {
+      e.target.style.color='red';
+    }
+    else
+    {
+      e.target.style.color='blue';
+    }
   }
   return (
     <div className="Home" style={{ width: '85%', float: 'right' }}>
