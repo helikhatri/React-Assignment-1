@@ -34,7 +34,7 @@ export default function Login(props) {
       if (response.status === 200) {
         localStorage.setItem("token", JSON.stringify(response.data.token));
         localStorage.setItem("username", JSON.stringify(response.email));
-        alert("success");
+        //alert("success");
         userHasAuthenticated(true);
         history.push('/Userlist');
       }

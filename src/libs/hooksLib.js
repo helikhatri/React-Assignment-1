@@ -6,10 +6,15 @@ export function useFormFields(initialState) {
   return [
     fields,
     function (event) {
-      setValues({
-        ...fields,
-        [event.target.id]: event.target.value
-      });
+      if (event === "") {
+        setValues('');
+      }
+      else {
+        setValues({
+          ...fields,
+          [event.target.id]: event.target.value
+        });
+      }
     }
   ];
 }
