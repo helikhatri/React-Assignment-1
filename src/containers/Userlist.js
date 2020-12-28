@@ -174,12 +174,7 @@ const MyComponent= (props)=>{
 
   const subHeaderComponentMemo = React.useMemo(() => {
     const handleClear = (event) => {
-      if (event.target.id == '1') {
-        handleFieldChange('');
-      }
-      if (event.target.id == '2') {
-        handleFieldChange('');
-      }
+    handleFieldChange(event,1);
     }
 
     return <FilterComponent onFilter={e => handleFieldChange(e.target.value)}
@@ -220,7 +215,7 @@ const MyComponent= (props)=>{
           <Button variant="link" onClick={showHide} > Pantone_value</Button>
           <Button variant="link" onClick={showHide} >Year</Button>
           <Button variant="link" onClick={showHide} > Color </Button>
-          <CSVLink data={filteredItems} style={{ float: 'right' }}>Export CSV</CSVLink>
+          <CSVLink data={filteredItems} style={{ float: 'right' }} filename={"my-file.csv"}>Export CSV</CSVLink>
          
           <DataTable
             

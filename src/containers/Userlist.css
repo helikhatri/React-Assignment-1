@@ -25,3 +25,14 @@
   align-items: center;
   justify-content: center; 
 }
+
+.nav-link
+{
+  color:white;
+}
+
+.nav-link:hover
+{
+  background-color: #2574A9;
+  color:white !important;
+}

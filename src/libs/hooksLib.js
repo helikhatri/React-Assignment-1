@@ -5,8 +5,9 @@ export function useFormFields(initialState) {
 
   return [
     fields,
-    function (event) {
-      if (event === "") {
+    function (event,isClear) {
+      debugger;
+      if (isClear === 1) {
         setValues('');
       }
       else {
