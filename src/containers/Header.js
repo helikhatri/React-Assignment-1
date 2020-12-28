@@ -4,7 +4,11 @@ import Routes from "../Routes";
 import { useHistory } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
 import { LinkContainer } from "react-router-bootstrap";
+import Form from "react-bootstrap/Form";
+import FormControl from "react-bootstrap/FormControl";
+import Button from "react-bootstrap/Button";
 import { AppContext } from "../libs/contextLib";
 import logo from '../logo.png';
 
@@ -18,38 +22,22 @@ function Header(props) {
           <div className="sidebar-logo">
             Assignment
 </div>
-          <ul className="sidebar-navigation">
-            <li className="header">Navigation</li>
-            <li>
-              <a href="/Home">
-                <i className="fa fa-home" aria-hidden="true"></i> Homepage
-    </a>
-            </li>
-            <li>
-              <a href="#">
-                <i className="fa fa-tachometer" aria-hidden="true"></i> Manage User
-    </a>
-              <ul className="nav-pills nav-stacked" style={{ listStyleType: 'none' }}>
-                <li><a href="/Userlist">User List</a></li>
-                <li><a href="#">User History</a></li>
-              </ul>
-            </li>
-            <li>
-              <a href="#">
-                <i className="fa fa-users" aria-hidden="true"></i> Manage Customer
-    </a>
-            </li>
-            <li>
-              <a href="#">
-                <i className="fa fa-cog" aria-hidden="true"></i> Settings
-    </a>
-            </li>
-            <li>
-              <a href="#">
-                <i className="fa fa-info-circle" aria-hidden="true"></i> Information
-    </a>
-            </li>
-          </ul>
+          {
+          <>
+          <Navbar.Collapse id="basic-navbar-nav" style={{display:'block'}}>
+            <Nav className="flex-column">
+              <Nav.Link href="/Home" style={{color:'white'}}>Home</Nav.Link>
+              <Nav.Link href="/Home" style={{color:'white'}}>Dashboard</Nav.Link>
+              <NavDropdown title="Manage User" id="basic-nav-dropdown" style={{color:'white'}}>
+                <NavDropdown.Item href="/Userlist">User List</NavDropdown.Item>
+                <NavDropdown.Item href="/Userlist">User History</NavDropdown.Item>
+                {/* <NavDropdown.Divider />
+                <NavDropdown.Item href="#action/3.4" >Separated link</NavDropdown.Item> */}
+              </NavDropdown>
+            </Nav>
+          </Navbar.Collapse>
+          </>
+          }
         </div>
       ) : ""
       }

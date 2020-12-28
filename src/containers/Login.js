@@ -31,12 +31,18 @@ export default function Login(props) {
       "password": fields.password,
     }
     axios.post(apiurl, payload).then(function (response) {
+      debugger;
       if (response.status === 200) {
         localStorage.setItem("token", JSON.stringify(response.data.token));
         localStorage.setItem("username", JSON.stringify(response.email));
         //alert("success");
         userHasAuthenticated(true);
         history.push('/Userlist');
+      }
+      else
+      {
+        setIsLoading(false);
+        alert("Check yur Username and password");
       }
     });
   };
