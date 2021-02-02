@@ -7,6 +7,9 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { LinkContainer } from "react-router-bootstrap";
 import { AppContext } from "./libs/contextLib";
+import {Provider} from 'react-redux';
+import Home from './components/home/Home';
+import store from './store';
 
 let path=window.location.pathname;
 function App() {
@@ -25,7 +28,7 @@ function App() {
       }
       else
       {
-        history.push('/Login');
+        history.push("/Login");
       }
     }
     catch(e) {
@@ -40,7 +43,7 @@ function App() {
     userHasAuthenticated(false);
     localStorage.removeItem('token');
     localStorage.removeItem('username');
-    history.push('/Login');
+    history.push("/Login");
   }
   return (
     !isAuthenticating && (
@@ -50,6 +53,9 @@ function App() {
     <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated }}>
       <Routes isAuthenticated={isAuthenticated} />
     </AppContext.Provider>
+    <Provider store={store}>
+      <Home/>
+    </Provider>
   </div>
   </div>
   )

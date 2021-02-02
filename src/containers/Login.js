@@ -37,7 +37,7 @@ export default function Login(props) {
         localStorage.setItem("username", JSON.stringify(response.email));
         //alert("success");
         userHasAuthenticated(true);
-        history.push('/Userlist');
+        history.push("/Userlist");
       }
       else
       {
@@ -73,6 +73,7 @@ export default function Login(props) {
           type="submit"
           isLoading={isLoading}
           disabled={!validateForm()}
+          title='login'
         >
           Login
             </LoaderButton>

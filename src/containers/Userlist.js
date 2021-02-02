@@ -9,6 +9,7 @@ import { useFormFields } from "../libs/hooksLib";
 import axios from 'axios';
 import "./Userlist.css";
 import { CSVLink } from 'react-csv';
+import { useParams } from "react-router-dom";
 //import { useFormFields } from "../libs/hooksLib";
 
 const MyComponent= (props)=>{
@@ -27,8 +28,8 @@ const MyComponent= (props)=>{
     Text4: ""
   });
   const [filterColumn, setFiltercolumn] = useState([]);
- // const [filteredItems,setFilteredItems]=useState([]);
-  const columns=[
+ const [Items,setFilteredItems]=useState([]);
+  const [columns, setColumns] = useState([
 
     {
       index: 0,
@@ -76,30 +77,35 @@ const MyComponent= (props)=>{
                 style={{ margin: '5px' }}
                 onClick={editRecord}
               >Edit</button>
-              <button
+              <Button
+              id='btn'
                 className="btn btn-danger btn-sm"
-                onClick={() => deleteRecord(record.id)}
-                {...<FontAwesomeIcon icon="fa fa-trash"></FontAwesomeIcon>}
+                onClick={deleteRecord
+              //     () =>  {console.log(record,users)
+              //     const dataCopy =  [...filteredItems];
+              //     dataCopy.splice(record.row.index, 1);
+              // setFilteredItems(dataCopy);}
+                }
               >Delete
-            </button>
+            </Button>
             </Fragment>
           );
         }
     }
-  ];
-  
-  useEffect(() => {
+  ]);
     
+  useEffect(() => {
     axios.get(apiurl)
       .then((response =>
-       {debugger;
+       {
          setUsers(response.data.data)
-         debugger;}  ))
+         }  ))
       .then(setFiltercolumn(columns))
       console.log(users);
   }, [])
 
-  useEffect(() => {
+  
+   useEffect(() => {
     setInterval(() => {
       alert ?
         setAlert(false)
@@ -107,13 +113,13 @@ const MyComponent= (props)=>{
     }, 2000);
   }, [])
 
-   
+  
   const filteredItems = users != null && users.length >0 && filterText 
   ? users.filter(item =>
-    FilterType == 1 ? item.name.toLowerCase().includes(filterText.Text1) :
-      FilterType == 2 ? item.pantone_value.toLowerCase().includes(filterText.Text2) :
-        FilterType == 3 ? item.year.toString().includes(filterText.Text3) :
-          FilterType == 4 ? item.color.toLowerCase().includes(filterText.Text4) :
+    FilterType === 1 ? item.name.toLowerCase().includes(filterText.Text1) :
+      FilterType === 2 ? item.pantone_value.toLowerCase().includes(filterText.Text2) :
+        FilterType === 3 ? item.year.toString().includes(filterText.Text3) :
+          FilterType === 4 ? item.color.toLowerCase().includes(filterText.Text4) :
          users) :users;
 
   const FilterComponent = ({ filterText, onClear, onInput }) => (
@@ -146,7 +152,6 @@ const MyComponent= (props)=>{
           onChange={handleFieldChange} onInput={onInput} />
       </Form.Group>
       <Button className="ClearButton" id='4' onClick={onClear} style={{ marginBottom: '16px' }}>X</Button>
-
     </>
   );
   
@@ -161,17 +166,7 @@ const MyComponent= (props)=>{
     const user = [...users];
     setMsg('Record Edited successfully');
   }
-  const deleteRecord = (index) => {
-    debugger;
-    const user = [...users];
-    user.splice(index, 1);
-    setAlert(true);
-   // filteredItems=user;
-    setUsers(user);
-    setMsg('Record Deleted successfully');
-  }
-  
-
+ 
   const subHeaderComponentMemo = React.useMemo(() => {
     const handleClear = (event) => {
     handleFieldChange(event,1);
@@ -186,11 +181,12 @@ const MyComponent= (props)=>{
   const showHide = (e) => {
    // setShowhide(true);
     const index = parseInt(e.target.value);
-    let column = [...filterColumn];
+    let column = [...columns];
     if (column[index].index == index) {
       columns[index].visible = column[index].visible == true ? false : true;
     }
     column = columns.filter(col => col.visible == true);
+    // setFiltercolumn(column);
     setFiltercolumn(column);
     setShowhide(true);
     if(columns[index].visible == false)
@@ -201,7 +197,17 @@ const MyComponent= (props)=>{
     {
       e.target.style.color='blue';
     }
-    console.log(hide, filterColumn);
+  }
+
+  const deleteRecord = (index) => {
+    debugger;
+    console.log(users);
+    const user = [...filteredItems];
+    user.splice(index, 1);
+    setAlert(true);
+   // filteredItems=user;
+    setUsers(user);
+    setMsg('Record Deleted successfully');
   }
   return (
     <div className="Home" style={{ width: '85%', float: 'right' }}>
@@ -211,16 +217,16 @@ const MyComponent= (props)=>{
         </Alert> : null}
       { isAuthenticated && users != null && users.length > 0 ?
         <>
-          <Button variant="link" onClick={showHide} > Name</Button>
-          <Button variant="link" onClick={showHide} > Pantone_value</Button>
-          <Button variant="link" onClick={showHide} >Year</Button>
-          <Button variant="link" onClick={showHide} > Color </Button>
+        <Button variant="link" onClick={showHide} value='0'> Name</Button>
+          <Button variant="link" onClick={showHide} value='1'> Pantone_value</Button>
+          <Button variant="link" onClick={showHide} value='2'>Year</Button>
+          <Button variant="link" onClick={showHide} value='3'> Color </Button>
           <CSVLink data={filteredItems} style={{ float: 'right' }} filename={"my-file.csv"}>Export CSV</CSVLink>
          
           <DataTable
             
             title="UserList"
-            columns={columns}
+            columns={filterColumn}
             data={filteredItems}
             selectableRows
             persistTableHead
@@ -231,6 +237,7 @@ const MyComponent= (props)=>{
             colResizable
             responsive
             striped
+            deleteRecord={deleteRecord}
           /> </> : null
 
       }

@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<DeleteRecord> renders correctly 1`] = `
+<div
+  className="Home"
+  style={
+    Object {
+      "float": "right",
+      "width": "85%",
+    }
+  }
+/>
+`;

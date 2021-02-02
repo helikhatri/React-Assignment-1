@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Signup snapshot test for signup 1`] = `
+<form
+  className=""
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+    size="lg"
+  >
+    <label
+      className="form-label"
+      htmlFor="email"
+    >
+      Email
+    </label>
+    <input
+      autoFocus={true}
+      className="form-control"
+      id="email"
+      onChange={[Function]}
+      type="email"
+      value=""
+    />
+  </div>
+  <div
+    className="form-group"
+    size="lg"
+  >
+    <label
+      className="form-label"
+      htmlFor="password"
+    >
+      Password
+    </label>
+    <input
+      className="form-control"
+      id="password"
+      onChange={[Function]}
+      type="password"
+      value=""
+    />
+  </div>
+  <div
+    className="form-group"
+    size="lg"
+  >
+    <label
+      className="form-label"
+      htmlFor="confirmPassword"
+    >
+      Confirm Password
+    </label>
+    <input
+      className="form-control"
+      id="confirmPassword"
+      onChange={[Function]}
+      type="password"
+      value=""
+    />
+  </div>
+  <button
+    className="btn btn-success btn-lg"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    Signup
+  </button>
+</form>
+`;
